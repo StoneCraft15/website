@@ -1,0 +1,483 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Halaman Interaktif</title>
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;700;800&family=DM+Sans:ital,wght@0,300;0,400;1,300&display=swap" rel="stylesheet"/>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #0b0b0f;
+      --surface: #13131a;
+      --border: rgba(255,255,255,0.08);
+      --accent: #e8ff6b;
+      --accent2: #6bffd4;
+      --accent3: #ff6b9d;
+      --text: #f0efea;
+      --muted: #888;
+    }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'DM Sans', sans-serif;
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    /* NOISE OVERLAY */
+    body::before {
+      content: '';
+      position: fixed; inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+      pointer-events: none; z-index: 9999;
+      opacity: 0.4;
+    }
+
+    /* MAIN LAYOUT */
+    .app {
+      max-width: 960px;
+      margin: 0 auto;
+      padding: 48px 24px;
+    }
+
+    /* HEADER */
+    header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 56px;
+    }
+    .logo {
+      font-family: 'Syne', sans-serif;
+      font-weight: 800;
+      font-size: 1.4rem;
+      letter-spacing: -0.03em;
+    }
+    .logo span { color: var(--accent); }
+    .badge {
+      font-size: 0.72rem;
+      border: 1px solid var(--border);
+      padding: 4px 12px;
+      border-radius: 999px;
+      color: var(--muted);
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    /* HERO */
+    .hero {
+      margin-bottom: 56px;
+    }
+    .hero h1 {
+      font-family: 'Syne', sans-serif;
+      font-size: clamp(2.4rem, 6vw, 4rem);
+      font-weight: 800;
+      line-height: 1.08;
+      letter-spacing: -0.04em;
+      margin-bottom: 16px;
+    }
+    .hero h1 em {
+      font-style: normal;
+      color: var(--accent);
+    }
+    .hero p {
+      color: var(--muted);
+      font-size: 1rem;
+      font-weight: 300;
+      line-height: 1.7;
+      max-width: 480px;
+    }
+
+    /* CARDS GRID */
+    .cards {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+      gap: 16px;
+    }
+
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 28px;
+      cursor: pointer;
+      transition: border-color 0.25s, transform 0.25s, box-shadow 0.25s;
+      position: relative;
+      overflow: hidden;
+    }
+    .card::before {
+      content: '';
+      position: absolute;
+      top: -60px; right: -60px;
+      width: 120px; height: 120px;
+      border-radius: 50%;
+      opacity: 0.12;
+      transition: opacity 0.3s;
+    }
+    .card:nth-child(1)::before { background: var(--accent); }
+    .card:nth-child(2)::before { background: var(--accent2); }
+    .card:nth-child(3)::before { background: var(--accent3); }
+    .card:nth-child(4)::before { background: #a78bfa; }
+    .card:nth-child(5)::before { background: #fb923c; }
+    .card:nth-child(6)::before { background: #22d3ee; }
+
+    .card:hover {
+      border-color: rgba(255,255,255,0.2);
+      transform: translateY(-3px);
+      box-shadow: 0 12px 40px rgba(0,0,0,0.4);
+    }
+    .card:hover::before { opacity: 0.22; }
+
+    .card-icon {
+      font-size: 1.8rem;
+      margin-bottom: 16px;
+      display: block;
+    }
+    .card-title {
+      font-family: 'Syne', sans-serif;
+      font-weight: 700;
+      font-size: 1.05rem;
+      margin-bottom: 8px;
+      letter-spacing: -0.02em;
+    }
+    .card-desc {
+      font-size: 0.85rem;
+      color: var(--muted);
+      line-height: 1.6;
+      margin-bottom: 20px;
+    }
+    .card-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 0.8rem;
+      font-weight: 400;
+      color: var(--text);
+      opacity: 0.7;
+      transition: opacity 0.2s, gap 0.2s;
+      letter-spacing: 0.02em;
+    }
+    .card:hover .card-btn {
+      opacity: 1;
+      gap: 10px;
+    }
+
+    /* MODAL OVERLAY */
+    .overlay {
+      position: fixed; inset: 0;
+      background: rgba(0,0,0,0.7);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+      z-index: 100;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.35s ease;
+    }
+    .overlay.open {
+      opacity: 1;
+      pointer-events: all;
+    }
+
+    /* MODAL PANEL */
+    .panel {
+      background: var(--surface);
+      border: 1px solid rgba(255,255,255,0.12);
+      border-radius: 24px;
+      width: 100%;
+      max-width: 620px;
+      max-height: 88vh;
+      overflow-y: auto;
+      transform: translateY(32px) scale(0.97);
+      transition: transform 0.38s cubic-bezier(0.22, 1, 0.36, 1);
+      position: relative;
+    }
+    .overlay.open .panel {
+      transform: translateY(0) scale(1);
+    }
+
+    .panel-header {
+      padding: 28px 28px 0;
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 16px;
+    }
+    .panel-icon {
+      font-size: 2.4rem;
+      line-height: 1;
+    }
+    .close-btn {
+      background: rgba(255,255,255,0.06);
+      border: 1px solid var(--border);
+      color: var(--text);
+      width: 36px; height: 36px;
+      border-radius: 50%;
+      cursor: pointer;
+      font-size: 1rem;
+      display: flex; align-items: center; justify-content: center;
+      transition: background 0.2s, transform 0.2s;
+      flex-shrink: 0;
+    }
+    .close-btn:hover {
+      background: rgba(255,255,255,0.12);
+      transform: rotate(90deg);
+    }
+
+    .panel-body {
+      padding: 20px 28px 32px;
+    }
+    .panel-title {
+      font-family: 'Syne', sans-serif;
+      font-weight: 800;
+      font-size: 1.6rem;
+      letter-spacing: -0.04em;
+      margin-bottom: 12px;
+    }
+    .panel-subtitle {
+      color: var(--muted);
+      font-size: 0.92rem;
+      line-height: 1.7;
+      margin-bottom: 28px;
+    }
+
+    .panel-content {
+      border-top: 1px solid var(--border);
+      padding-top: 24px;
+    }
+    .info-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 12px 0;
+      border-bottom: 1px solid var(--border);
+      font-size: 0.88rem;
+    }
+    .info-row:last-child { border-bottom: none; }
+    .info-label { color: var(--muted); }
+    .info-val {
+      font-weight: 400;
+      padding: 3px 10px;
+      border-radius: 6px;
+      font-size: 0.82rem;
+    }
+
+    .tag-green { background: rgba(107,255,212,0.12); color: var(--accent2); }
+    .tag-yellow { background: rgba(232,255,107,0.12); color: var(--accent); }
+    .tag-pink { background: rgba(255,107,157,0.12); color: var(--accent3); }
+    .tag-purple { background: rgba(167,139,250,0.12); color: #a78bfa; }
+    .tag-orange { background: rgba(251,146,60,0.12); color: #fb923c; }
+    .tag-cyan { background: rgba(34,211,238,0.12); color: #22d3ee; }
+
+    .panel-footer {
+      display: flex;
+      gap: 10px;
+      margin-top: 28px;
+    }
+    .btn {
+      flex: 1;
+      padding: 12px;
+      border-radius: 10px;
+      border: none;
+      cursor: pointer;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.88rem;
+      font-weight: 400;
+      transition: opacity 0.2s, transform 0.15s;
+    }
+    .btn:active { transform: scale(0.97); }
+    .btn-primary {
+      background: var(--accent);
+      color: #0b0b0f;
+      font-weight: 600;
+    }
+    .btn-secondary {
+      background: rgba(255,255,255,0.06);
+      color: var(--text);
+      border: 1px solid var(--border);
+    }
+    .btn:hover { opacity: 0.85; }
+
+    /* SCROLLBAR */
+    .panel::-webkit-scrollbar { width: 4px; }
+    .panel::-webkit-scrollbar-track { background: transparent; }
+    .panel::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
+
+    /* FADE-IN STAGGER */
+    .card {
+      opacity: 0;
+      animation: fadeUp 0.5s cubic-bezier(0.22,1,0.36,1) forwards;
+    }
+    .card:nth-child(1) { animation-delay: 0.05s; }
+    .card:nth-child(2) { animation-delay: 0.12s; }
+    .card:nth-child(3) { animation-delay: 0.19s; }
+    .card:nth-child(4) { animation-delay: 0.26s; }
+    .card:nth-child(5) { animation-delay: 0.33s; }
+    .card:nth-child(6) { animation-delay: 0.40s; }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(20px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    .hero {
+      opacity: 0;
+      animation: fadeUp 0.6s 0s cubic-bezier(0.22,1,0.36,1) forwards;
+    }
+    header {
+      opacity: 0;
+      animation: fadeUp 0.5s 0s cubic-bezier(0.22,1,0.36,1) forwards;
+    }
+  </style>
+</head>
+<body>
+<div class="app">
+  <header>
+    <div class="logo">StoneCraft<span></span></div>
+    <div class="badge">StoneCraft Present</div>
+  </header>
+
+  <div class="hero">
+    <h1>Welcome!</h1>
+    <p>Halo 👋, Selamat Datang di website resmi StoneCraft. silakan klik beberapa opsi dibawah untuk informasi lebih lanjut</p>
+  </div>
+
+  <div class="cards" id="cards"></div>
+</div>
+
+<!-- OVERLAY -->
+<div class="overlay" id="overlay" role="dialog" aria-modal="true">
+  <div class="panel" id="panel">
+    <div class="panel-header">
+      <div class="panel-icon" id="pIcon"></div>
+      <button class="close-btn" id="closeBtn" aria-label="Tutup">✕</button>
+    </div>
+    <div class="panel-body">
+      <div class="panel-title" id="pTitle"></div>
+      <div class="panel-subtitle" id="pSubtitle"></div>
+      <div class="panel-content" id="pContent"></div>
+      <div class="panel-footer">
+        <button class="btn btn-primary" id="pAction"></button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  const pages = [
+    {
+      icon: "💰",
+      title: "Donate",
+      desc: "Halo Sahabat, Bantu kami lewat jalur donasi untuk keperluan server",
+      subtitle: "Klik tombol di bawah untuk memberi donasi ke owner 👇",
+      btnLabel: "Donate",
+      url: "https://s.id/server-donate",  // ← ganti dengan link kamu
+    },
+    {
+      icon: "🏪",
+      title: "Toko",
+      desc: "Kunjugi toko kami dan beli keperluan anda dengan harga murah",
+      subtitle: "Klik tombol di bawah untuk pergi ke toko",
+      btnLabel: "Kunjungi Toko",
+      url: "https://s.id/toko-stonecraft",  // ← ganti dengan link kamu
+    },
+    {
+      icon: "🏢",
+      title: "Komunitas",
+      desc: "Mari bergabung ke komunitas agar bisa saling mengenal dan berkomunikasi secara online",
+      subtitle: "Klik tombol dibawah untuk bergabung!",
+      btnLabel: "Gabung!",
+      url: "https://chat.whatsapp.com/BxlVSRiJExr7Y6rd0NtLN4",  // ← ganti dengan link kamu
+    },
+    {
+      icon: "⚙️",
+      title: "Status Server",
+      desc: "Lihat status server",
+      subtitle: "Server akan rilis pada hari sabtu tanggal 25 april tahun 2026",
+      btnLabel: "Back",
+      type: "text",
+      content: "IP: -                   Port: -",  // ← ganti dengan teks kamu
+    },
+    {
+      icon: "📁",
+      title: "Informasi Server",
+      desc: "Lihat update terbaru",
+      subtitle: "Musim 21",
+      btnLabel: "Back",
+      type: "text",
+      content: "Update Tebaru:<p>- Pembaruan Lobby<p>- Pembaruan Map TheBackrooms<p>- Harga rank diturunkan 75%</p>",  // ← ganti dengan teks kamu
+    },
+  ];
+
+  const cardsEl = document.getElementById('cards');
+  const overlay  = document.getElementById('overlay');
+  const panel    = document.getElementById('panel');
+  const pIcon    = document.getElementById('pIcon');
+  const pTitle   = document.getElementById('pTitle');
+  const pSubtitle= document.getElementById('pSubtitle');
+  const pContent = document.getElementById('pContent');
+  const pAction  = document.getElementById('pAction');
+  const closeBtn = document.getElementById('closeBtn');
+  let currentUrl = null;
+
+  pages.forEach((p, i) => {
+    const card = document.createElement('div');
+    card.className = 'card';
+    card.innerHTML = `
+      <span class="card-icon">${p.icon}</span>
+      <div class="card-title">${p.title}</div>
+      <div class="card-desc">${p.desc}</div>
+      <div class="card-btn">Buka halaman <span>→</span></div>
+    `;
+    card.addEventListener('click', () => openPage(p));
+    cardsEl.appendChild(card);
+  });
+
+  function openPage(p) {
+    currentUrl = p.url || null;
+    pIcon.textContent = p.icon;
+    pTitle.textContent = p.title;
+    pSubtitle.textContent = p.subtitle;
+    pAction.textContent = p.url ? p.btnLabel + ' ↗' : p.btnLabel;
+
+    if (p.type === 'text') {
+      pContent.innerHTML = `
+        <div style="border-top: 1px solid var(--border); padding-top: 20px; font-size: 0.92rem; line-height: 1.85; color: #ccc; white-space: pre-line;">
+          ${p.content}
+        </div>
+      `;
+    } else {
+      pContent.innerHTML = '';
+    }
+
+    overlay.classList.add('open');
+    document.body.style.overflow = 'hidden';
+  }
+
+  function closePage() {
+    overlay.classList.remove('open');
+    document.body.style.overflow = '';
+  }
+
+  closeBtn.addEventListener('click', closePage);
+  pAction.addEventListener('click', () => {
+    if (currentUrl) window.open(currentUrl, '_blank');
+    closePage();
+  });
+
+  overlay.addEventListener('click', e => {
+    if (e.target === overlay) closePage();
+  });
+
+  document.addEventListener('keydown', e => {
+    if (e.key === 'Escape') closePage();
+  });
+</script>
+</body>
+</html>
