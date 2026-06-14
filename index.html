@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Halaman Interaktif</title>
+  <title>StoneCraft - Official</title>
   <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;700;800&family=DM+Sans:ital,wght@0,300;0,400;1,300&display=swap" rel="stylesheet"/>
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -38,7 +38,7 @@
 
     /* MAIN LAYOUT */
     .app {
-      max-width: 960px;
+      max-width: 1200px;
       margin: 0 auto;
       padding: 48px 24px;
     }
@@ -66,6 +66,16 @@
       letter-spacing: 0.08em;
       text-transform: uppercase;
     }
+    /* FOOTER */
+    footer {
+      background-color: #0d0d0d;
+      color: #888;
+      text-align: center;
+      padding: 16px;
+      margin-top: 48px;
+      font-size: 0.8rem;
+      border-top: 1px solid rgba(255,255,255,0.08);
+    }
 
     /* HERO */
     .hero {
@@ -85,10 +95,10 @@
     }
     .hero p {
       color: var(--muted);
-      font-size: 1rem;
+      font-size: 1.05rem;
       font-weight: 300;
       line-height: 1.7;
-      max-width: 480px;
+      max-width: 640px;
     }
 
     /* CARDS GRID */
@@ -339,13 +349,13 @@
 <body>
 <div class="app">
   <header>
-    <div class="logo">StoneCraft<span></span></div>
+    <div class="logo"><span></span></div>
     <div class="badge">StoneCraft Present</div>
   </header>
 
   <div class="hero">
     <h1>Welcome!</h1>
-    <p>Halo 👋, Selamat Datang di website resmi StoneCraft. silakan klik beberapa opsi dibawah untuk informasi lebih lanjut</p>
+    </p>
   </div>
 
   <div class="cards" id="cards"></div>
@@ -377,7 +387,7 @@
       desc: "Halo Sahabat, Bantu kami lewat jalur donasi untuk keperluan server",
       subtitle: "Klik tombol di bawah untuk memberi donasi ke owner 👇",
       btnLabel: "Donate",
-      url: "https://s.id/server-donate",  // ← ganti dengan link kamu
+      url: "https://s.id/server-donate"
     },
     {
       icon: "🏪",
@@ -385,7 +395,7 @@
       desc: "Kunjugi toko kami dan beli keperluan anda dengan harga murah",
       subtitle: "Klik tombol di bawah untuk pergi ke toko",
       btnLabel: "Kunjungi Toko",
-      url: "https://s.id/toko-stonecraft",  // ← ganti dengan link kamu
+      url: "https://s.id/toko-stonecraft"
     },
     {
       icon: "🏢",
@@ -393,25 +403,25 @@
       desc: "Mari bergabung ke komunitas agar bisa saling mengenal dan berkomunikasi secara online",
       subtitle: "Klik tombol dibawah untuk bergabung!",
       btnLabel: "Gabung!",
-      url: "https://chat.whatsapp.com/BxlVSRiJExr7Y6rd0NtLN4",  // ← ganti dengan link kamu
+      url: "https://chat.whatsapp.com/BxlVSRiJExr7Y6rd0NtLN4"
     },
     {
-      icon: "⚙️",
-      title: "Status Server",
-      desc: "Lihat status server",
-      subtitle: "Server akan rilis pada hari sabtu tanggal 25 april tahun 2026",
-      btnLabel: "Back",
-      type: "text",
-      content: "IP: -                   Port: -",  // ← ganti dengan teks kamu
+      icon: "⛏️",
+      title: "Youtube",
+      desc: "Mari berlangganan",
+      subtitle: "",
+      btnLabel: "Subscribe",
+      type: "url",
+      url: "https://youtube.com/@stonecraft-official?si=_Y6yQbF0_5R0z-lO"
     },
     {
       icon: "📁",
       title: "Informasi Server",
-      desc: "Lihat update terbaru",
-      subtitle: "Musim 21",
+      desc: "Lihat informasi",
+      subtitle: "IP: --- PORT: ---",
       btnLabel: "Back",
       type: "text",
-      content: "Update Tebaru:<p>- Pembaruan Lobby<p>- Pembaruan Map TheBackrooms<p>- Harga rank diturunkan 75%</p>",  // ← ganti dengan teks kamu
+      content: "Update Tebaru:<p>CleoCraft<p>akan hadir bulan juli 2026!!!</p>"
     },
   ];
 
@@ -433,7 +443,7 @@
       <span class="card-icon">${p.icon}</span>
       <div class="card-title">${p.title}</div>
       <div class="card-desc">${p.desc}</div>
-      <div class="card-btn">Buka halaman <span>→</span></div>
+      <div class="card-btn"> </div>
     `;
     card.addEventListener('click', () => openPage(p));
     cardsEl.appendChild(card);
@@ -479,5 +489,8 @@
     if (e.key === 'Escape') closePage();
   });
 </script>
+<footer>
+      <p>Copyright © 2025 - 2026 Tim DEV StoneCraft Office</p>
+    </footer>
 </body>
 </html>
